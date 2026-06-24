@@ -12,6 +12,17 @@
     <label>Danh mục:</label>
     <input type="text" name="category" value="<?= e($old['category'] ?? '') ?>">
 
+    <label>Trạng thái:</label>
+    <select name="status">
+        <?php foreach (['available' => 'Rảnh', 'rented' => 'Đang cho mượn', 'maintenance' => 'Bảo trì'] as $val => $label): ?>
+            <option value="<?= e($val) ?>" <?= ($old['status'] ?? ($equipment['status'] ?? 'available')) === $val ? 'selected' : '' ?>>
+                <?= e($label) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
+    <label>Ghi chú:</label>
+    <textarea name="note"><?= e($old['note'] ?? ($equipment['note'] ?? '')) ?></textarea>
     <button class="btn primary" type="submit">Lưu</button>
     <a class="btn" href="/equipments">Quay lại</a>
 </form>

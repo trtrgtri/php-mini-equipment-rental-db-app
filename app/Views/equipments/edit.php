@@ -45,6 +45,17 @@
         </div>
 
         <div class="form-actions">
+            <label>Trạng thái:</label>
+            <select name="status">
+                <?php foreach (['available' => 'Rảnh', 'rented' => 'Đang cho mượn', 'maintenance' => 'Bảo trì'] as $val => $label): ?>
+                    <option value="<?= e($val) ?>" <?= ($old['status'] ?? ($equipment['status'] ?? 'available')) === $val ? 'selected' : '' ?>>
+                        <?= e($label) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <label>Ghi chú:</label>
+            <textarea name="note"><?= e($old['note'] ?? ($equipment['note'] ?? '')) ?></textarea>
             <button class="btn primary" type="submit">Lưu Thay Đổi</button>
             <a class="btn outline" href="/equipments">Hủy</a>
         </div>

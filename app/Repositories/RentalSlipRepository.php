@@ -10,8 +10,11 @@ class RentalSlipRepository
                 JOIN equipments e ON rs.equipment_id = e.id";
         $params = [];
         if ($keyword !== '') {
-            $sql .= " WHERE rs.slip_code LIKE :keyword OR rs.borrower_name LIKE :keyword OR e.name LIKE :keyword";
-            $params['keyword'] = '%' . $keyword . '%';
+            $sql .= " WHERE rs.slip_code LIKE :kw_slip OR rs.borrower_name LIKE :kw_borrower OR e.name LIKE :kw_eq_name";
+            $searchTerm = '%' . $keyword . '%';
+            $params['kw_slip'] = $searchTerm;
+            $params['kw_borrower'] = $searchTerm;
+            $params['kw_eq_name'] = $searchTerm;
         }
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
@@ -28,8 +31,11 @@ class RentalSlipRepository
                 FROM rental_slips rs JOIN equipments e ON rs.equipment_id = e.id";
         $params = [];
         if ($keyword !== '') {
-            $sql .= " WHERE rs.slip_code LIKE :keyword OR rs.borrower_name LIKE :keyword OR e.name LIKE :keyword";
-            $params['keyword'] = '%' . $keyword . '%';
+            $sql .= " WHERE rs.slip_code LIKE :kw_slip OR rs.borrower_name LIKE :kw_borrower OR e.name LIKE :kw_eq_name";
+            $searchTerm = '%' . $keyword . '%';
+            $params['kw_slip'] = $searchTerm;
+            $params['kw_borrower'] = $searchTerm;
+            $params['kw_eq_name'] = $searchTerm;
         }
         $sql .= " ORDER BY {$sort} {$direction} LIMIT :limit OFFSET :offset";
 

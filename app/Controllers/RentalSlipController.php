@@ -101,31 +101,32 @@ class RentalSlipController
     {
         $id = (int)($_POST['id'] ?? 0);
         $values = [
+            'slip_code' => trim($_POST['slip_code'] ?? ''),
             'borrower_name' => trim($_POST['borrower_name'] ?? ''),
-            'borrower_email' => trim($_POST['borrower_email'] ?? ''),
-            'status' => trim($_POST['status'] ?? 'borrowed'),
+            'status' => trim($_POST['status'] ?? '')
         ];
 
-        $errors = [];
-        if ($values['borrower_name'] === '') $errors['borrower_name'] = 'Vui lòng nhập tên người mượn.';
-
-        if (!empty($errors)) {
-            $old = array_merge($this->slipRepo()->findById($id), $values);
-            $equipment = $this->equipmentRepo()->findById($old['equipment_id']);
-            view('rental_slips/edit', compact('errors', 'old', 'equipment'));
-            return;
+        try {
+            $this->slipRepo()->update($id, $values);
+            flash_set('success', 'Cập nhật phiếu mượn thành công.');
+            redirect('/rentals');
+        } catch (Exception $e) {
+            error_log('[RentalSlipController::update] ' . $e->getMessage());
+            flash_set('error', 'Lỗi hệ thống: Không thể cập nhật.');
+            redirect("/rentals/edit?id={$id}");
         }
-
-        $this->slipRepo()->update($id, $values);
-        flash_set('success', 'Cập nhật phiếu mượn thành công.');
-        redirect('/rentals');
     }
 
     public function delete(): void
     {
         $id = (int)($_POST['id'] ?? 0);
-        $this->slipRepo()->delete($id);
-        flash_set('success', 'Xóa phiếu mượn thành công.');
+        try {
+            $this->slipRepo()->delete($id);
+            flash_set('success', 'Xóa phiếu mượn thành công.');
+        } catch (Exception $e) {
+            error_log('[RentalSlipController::delete] ' . $e->getMessage());
+            flash_set('error', 'Lỗi hệ thống: Không thể xóa phiếu mượn.');
+        }
         redirect('/rentals');
     }
 }

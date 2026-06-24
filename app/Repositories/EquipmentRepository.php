@@ -9,8 +9,12 @@ class EquipmentRepository
         $sql = "SELECT COUNT(*) AS total FROM equipments";
         $params = [];
         if ($keyword !== '') {
-            $sql .= " WHERE equipment_code LIKE :keyword OR name LIKE :keyword OR category LIKE :keyword";
-            $params['keyword'] = '%' . $keyword . '%';
+            // Đặt tên parameter khác biệt cho từng trường
+            $sql .= " WHERE equipment_code LIKE :kw_code OR name LIKE :kw_name OR category LIKE :kw_category";
+            $searchTerm = '%' . $keyword . '%';
+            $params['kw_code'] = $searchTerm;
+            $params['kw_name'] = $searchTerm;
+            $params['kw_category'] = $searchTerm;
         }
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
@@ -26,8 +30,12 @@ class EquipmentRepository
         $sql = "SELECT id, equipment_code, name, category, status, note, created_at FROM equipments";
         $params = [];
         if ($keyword !== '') {
-            $sql .= " WHERE equipment_code LIKE :keyword OR name LIKE :keyword OR category LIKE :keyword";
-            $params['keyword'] = '%' . $keyword . '%';
+            // Sửa tương tự như countAll
+            $sql .= " WHERE equipment_code LIKE :kw_code OR name LIKE :kw_name OR category LIKE :kw_category";
+            $searchTerm = '%' . $keyword . '%';
+            $params['kw_code'] = $searchTerm;
+            $params['kw_name'] = $searchTerm;
+            $params['kw_category'] = $searchTerm;
         }
         $sql .= " ORDER BY {$sort} {$direction} LIMIT :limit OFFSET :offset";
 
