@@ -19,7 +19,6 @@ $router = new Router();
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/health', [HealthController::class, 'index']);
 
-// Equipments
 $router->get('/equipments', [EquipmentController::class, 'index']);
 $router->get('/equipments/create', [EquipmentController::class, 'create']);
 $router->post('/equipments/store', [EquipmentController::class, 'store']);
@@ -27,7 +26,6 @@ $router->get('/equipments/edit', [EquipmentController::class, 'edit']);
 $router->post('/equipments/update', [EquipmentController::class, 'update']);
 $router->post('/equipments/delete', [EquipmentController::class, 'delete']);
 
-// Rental Slips
 $router->get('/rentals', [RentalSlipController::class, 'index']);
 $router->get('/rentals/create', [RentalSlipController::class, 'create']);
 $router->post('/rentals/store', [RentalSlipController::class, 'store']);
@@ -35,4 +33,12 @@ $router->get('/rentals/edit', [RentalSlipController::class, 'edit']);
 $router->post('/rentals/update', [RentalSlipController::class, 'update']);
 $router->post('/rentals/delete', [RentalSlipController::class, 'delete']);
 
-$router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+try {
+    $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+} catch (Throwable $e) {
+    error_log($e->getMessage());
+
+    http_response_code(500);
+
+    view('errors/500');
+}

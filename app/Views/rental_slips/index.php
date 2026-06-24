@@ -1,14 +1,5 @@
 <?php
 
-/** * @var array $slips 
- * @var string $q
- * @var int $page
- * @var int $perPage
- * @var int $total
- * @var int $totalPages
- * @var string $sort
- * @var string $direction
- */
 ob_start();
 ?>
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
