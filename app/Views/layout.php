@@ -24,6 +24,12 @@
             </div>
         <?php endif; ?>
 
+        <?php if ($error = flash_get('error')): ?>
+            <div class="alert error" style="background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; padding: 12px 16px; margin-bottom: 24px;">
+                <?= e($error) ?>
+            </div>
+        <?php endif; ?>
+
         <?= $content ?? '' ?>
     </main>
 </body>

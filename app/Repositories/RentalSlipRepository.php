@@ -87,14 +87,16 @@ class RentalSlipRepository
     public function update(int $id, array $data): bool
     {
         $sql = "UPDATE rental_slips 
-                SET borrower_name = :borrower_name, borrower_email = :borrower_email, status = :status 
+                SET slip_code = :slip_code, borrower_name = :borrower_name, 
+                    borrower_email = :borrower_email, status = :status, updated_at = NOW()
                 WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
-            'id' => $id,
-            'borrower_name' => $data['borrower_name'],
+            'id'             => $id,
+            'slip_code'      => $data['slip_code'],
+            'borrower_name'  => $data['borrower_name'],
             'borrower_email' => $data['borrower_email'] ?: null,
-            'status' => $data['status']
+            'status'         => $data['status']
         ]);
 
         // Nghiệp vụ: Nếu phiếu chuyển thành 'returned', nhả thiết bị về 'available'

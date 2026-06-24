@@ -77,6 +77,10 @@ class RentalSlipController
             $old = $values;
             $availableEquipments = $this->equipmentRepo()->getAllAvailable();
             view('rental_slips/create', compact('errors', 'old', 'availableEquipments'));
+        } catch (Exception $e) {
+            error_log('[RentalSlipController::store] ' . $e->getMessage());
+            http_response_code(500);
+            view('errors/500');
         }
     }
 
