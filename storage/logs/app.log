@@ -1,0 +1,1 @@
+[2026-06-24 18:43:31] LỖI HỆ THỐNG: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES) tại C:\Users\Trong Tri\PHP-Session\php-mini-equipment-rental-db-app\app\Core\Database.php dòng 13

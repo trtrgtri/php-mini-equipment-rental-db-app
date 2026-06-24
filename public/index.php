@@ -36,9 +36,10 @@ $router->post('/rentals/delete', [RentalSlipController::class, 'delete']);
 try {
     $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 } catch (Throwable $e) {
-    error_log($e->getMessage());
+    $logFile = __DIR__ . '/../storage/logs/app.log';
+    $logMessage = "[" . date('Y-m-d H:i:s') . "] LỖI HỆ THỐNG: " . $e->getMessage() . " tại " . $e->getFile() . " dòng " . $e->getLine() . "\n";
+    error_log($logMessage, 3, $logFile);
 
     http_response_code(500);
-
     view('errors/500');
 }
