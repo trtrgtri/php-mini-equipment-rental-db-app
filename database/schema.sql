@@ -1,4 +1,3 @@
--- 1. Xóa Database cũ nếu đang bị lỗi và tạo lại từ đầu
 DROP DATABASE IF EXISTS mini_equipment_rental;
 
 CREATE DATABASE mini_equipment_rental
@@ -7,7 +6,6 @@ COLLATE utf8mb4_unicode_ci;
 
 USE mini_equipment_rental;
 
--- 2. TẠO BẢNG USERS
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
@@ -19,7 +17,6 @@ CREATE TABLE users (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- 3. TẠO BẢNG EQUIPMENTS
 CREATE TABLE equipments (
   id INT AUTO_INCREMENT PRIMARY KEY,
   equipment_code VARCHAR(50) NOT NULL,
@@ -35,7 +32,6 @@ CREATE TABLE equipments (
   INDEX idx_equipments_name (name)
 );
 
--- 4. TẠO BẢNG RENTAL_SLIPS
 CREATE TABLE rental_slips (
   id INT AUTO_INCREMENT PRIMARY KEY,
   slip_code VARCHAR(50) NOT NULL,

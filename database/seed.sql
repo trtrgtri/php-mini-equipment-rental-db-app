@@ -1,13 +1,7 @@
--- =================================================================
--- 5. NẠP DỮ LIỆU (CHẠY NGAY SAU KHI TẠO BẢNG ĐỂ ĐẢM BẢO ID KHỚP NHAU)
--- =================================================================
-
--- Nạp dữ liệu Users
 INSERT INTO users (name, email, password_hash, role, status) VALUES
 ('Quản trị viên', 'admin@example.com', '$2y$10$examplehashadmin', 'admin', 'active'),
 ('Nhân viên Kho', 'staff@example.com', '$2y$10$examplehashstaff', 'staff', 'active');
 
--- Nạp 15 dữ liệu Equipments
 INSERT INTO equipments (equipment_code, name, category, status, note) VALUES
 ('EQ-2026-001', 'Máy chiếu Sony Bravia', 'Điện tử', 'available', 'Đầy đủ cáp HDMI và remote'),
 ('EQ-2026-002', 'Bảng trắng di động 1m2', 'Văn phòng', 'rented', 'Kèm 3 bút lông và đồ lau'),
@@ -25,7 +19,6 @@ INSERT INTO equipments (equipment_code, name, category, status, note) VALUES
 ('EQ-2026-014', 'Máy phát điện mini', 'Sự kiện', 'available', 'Nhớ châm xăng trước khi dùng'),
 ('EQ-2026-015', 'Ổ cắm điện Lioa 10m', 'Văn phòng', 'available', '');
 
--- Nạp 15 dữ liệu Rental Slips
 INSERT INTO rental_slips (slip_code, equipment_id, borrower_name, borrower_email, status, created_at) VALUES
 ('SLIP-2026-001', 2, 'Trần Trọng Trí', 'tri.tran@example.com', 'borrowed', '2026-06-15 08:30:00'),
 ('SLIP-2026-002', 5, 'Nguyễn Văn An', 'an.nguyen@example.com', 'borrowed', '2026-06-18 10:15:00'),

@@ -66,7 +66,6 @@ class EquipmentController
             $old = $values;
             view('equipments/create', compact('errors', 'old'));
         } catch (Exception $e) {
-            // ĐÃ BỔ SUNG GHI LOG VÀ BÁO LỖI 500 Ở ĐÂY
             error_log('[EquipmentController::store] Lỗi DB: ' . $e->getMessage());
             http_response_code(500);
             view('errors/500');
@@ -119,7 +118,6 @@ class EquipmentController
             $old = array_merge($values, ['id' => $id]);
             view('equipments/edit', compact('errors', 'old'));
         } catch (Exception $e) {
-            // ĐÃ BỔ SUNG GHI LOG VÀ BÁO LỖI 500 Ở ĐÂY
             error_log('[EquipmentController::update] Lỗi DB: ' . $e->getMessage());
             http_response_code(500);
             view('errors/500');
@@ -133,7 +131,6 @@ class EquipmentController
             $this->repository()->delete($id);
             flash_set('success', 'Xóa thiết bị thành công.');
         } catch (Exception $e) {
-            // ĐÃ BỔ SUNG GHI LOG CHO TRƯỜNG HỢP XÓA LỖI Ở ĐÂY
             error_log('[EquipmentController::delete] Lỗi DB: ' . $e->getMessage());
 
             if ($e->getMessage() === 'foreign_key_constraint') {
