@@ -1,0 +1,6 @@
+RewriteEngine On
+# Nếu file hoặc folder có tồn tại thật thì truy cập trực tiếp
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# Nếu không tồn tại, chuyển hướng tất cả về index.php
+RewriteRule ^(.*)$ index.php [QSA,L]

@@ -51,11 +51,13 @@ class RentalSlipRepository
 
     public function create(array $data): bool
     {
-        $sql = "INSERT INTO rental_slips (slip_code, equipment_id, borrower_name, borrower_email, status)
-                VALUES (:slip_code, :equipment_id, :borrower_name, :borrower_email, :status)";
         try {
+            $this->db->beginTransaction();
+
+            $sql = "INSERT INTO rental_slips (slip_code, equipment_id, borrower_name, borrower_email, status) 
+                    VALUES (:slip_code, :equipment_id, :borrower_name, :borrower_email, :status)";
             $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute([
+            $stmt->execute([
                 'slip_code' => $data['slip_code'],
                 'equipment_id' => $data['equipment_id'],
                 'borrower_name' => $data['borrower_name'],
@@ -63,15 +65,15 @@ class RentalSlipRepository
                 'status' => $data['status']
             ]);
 
-            // Tùy chọn: Tự động đổi trạng thái thiết bị thành 'rented'
-            if ($result) {
-                $updateEq = $this->db->prepare("UPDATE equipments SET status = 'rented' WHERE id = :id");
-                $updateEq->execute(['id' => $data['equipment_id']]);
-            }
-            return $result;
-        } catch (PDOException $e) {
+            $updateStmt = $this->db->prepare("UPDATE equipments SET status = 'rented' WHERE id = :id");
+            $updateStmt->execute(['id' => $data['equipment_id']]);
+
+            $this->db->commit();
+            return true;
+        } catch (\PDOException $e) {
+            $this->db->rollBack();
             if (($e->errorInfo[1] ?? null) === 1062) {
-                throw new DuplicateRecordException('Slip code already exists.');
+                throw new DuplicateRecordException('Mã phiếu mượn đã tồn tại.');
             }
             throw $e;
         }
@@ -99,7 +101,6 @@ class RentalSlipRepository
             'status'         => $data['status']
         ]);
 
-        // Nghiệp vụ: Nếu phiếu chuyển thành 'returned', nhả thiết bị về 'available'
         if ($result && $data['status'] === 'returned') {
             $currentSlip = $this->findById($id);
             if ($currentSlip) {

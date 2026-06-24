@@ -4,24 +4,32 @@ class EquipmentRepository
 {
     public function __construct(private PDO $db) {}
 
-    public function countAll(string $keyword = ''): int
+    public function countAll(string $keyword = '', string $status = ''): int
     {
         $sql = "SELECT COUNT(*) AS total FROM equipments";
         $params = [];
+        $where = [];
+
         if ($keyword !== '') {
-            // Đặt tên parameter khác biệt cho từng trường
-            $sql .= " WHERE equipment_code LIKE :kw_code OR name LIKE :kw_name OR category LIKE :kw_category";
-            $searchTerm = '%' . $keyword . '%';
-            $params['kw_code'] = $searchTerm;
-            $params['kw_name'] = $searchTerm;
-            $params['kw_category'] = $searchTerm;
+            $where[] = "(equipment_code LIKE :kw OR name LIKE :kw OR category LIKE :kw)";
+            $params['kw'] = '%' . $keyword . '%';
         }
+
+        if ($status !== '') {
+            $where[] = "status = :status";
+            $params['status'] = $status;
+        }
+
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         return (int) ($stmt->fetch()['total'] ?? 0);
     }
 
-    public function getPaginated(string $keyword, int $limit, int $offset, string $sort, string $direction): array
+    public function getPaginated(string $keyword, int $limit, int $offset, string $sort, string $direction, string $status = ''): array
     {
         $allowedSorts = ['id', 'equipment_code', 'name', 'category', 'status', 'created_at'];
         $sort = in_array($sort, $allowedSorts, true) ? $sort : 'created_at';
@@ -29,14 +37,25 @@ class EquipmentRepository
 
         $sql = "SELECT id, equipment_code, name, category, status, note, created_at FROM equipments";
         $params = [];
+        $where = [];
+
         if ($keyword !== '') {
-            // Sửa tương tự như countAll
-            $sql .= " WHERE equipment_code LIKE :kw_code OR name LIKE :kw_name OR category LIKE :kw_category";
+            $where[] = "(equipment_code LIKE :kw_code OR name LIKE :kw_name OR category LIKE :kw_category)";
             $searchTerm = '%' . $keyword . '%';
             $params['kw_code'] = $searchTerm;
             $params['kw_name'] = $searchTerm;
             $params['kw_category'] = $searchTerm;
         }
+
+        if ($status !== '') {
+            $where[] = "status = :status";
+            $params['status'] = $status;
+        }
+
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
         $sql .= " ORDER BY {$sort} {$direction} LIMIT :limit OFFSET :offset";
 
         $stmt = $this->db->prepare($sql);
@@ -51,7 +70,6 @@ class EquipmentRepository
 
     public function getAllAvailable(): array
     {
-        // Lấy danh sách thiết bị đang rảnh để đưa vào dropdown mượn
         $stmt = $this->db->query("SELECT id, equipment_code, name FROM equipments WHERE status = 'available' ORDER BY name ASC");
         return $stmt->fetchAll();
     }
@@ -113,11 +131,10 @@ class EquipmentRepository
             $stmt = $this->db->prepare("DELETE FROM equipments WHERE id = :id");
             return $stmt->execute(['id' => $id]);
         } catch (PDOException $e) {
-            // 23000 hoặc 1451 là mã lỗi vi phạm khóa ngoại của MySQL
             if (($e->errorInfo[1] ?? null) === 1451 || $e->getCode() == 23000) {
                 throw new Exception("foreign_key_constraint");
             }
-            throw $e; // Ném các lỗi khác ra ngoài
+            throw $e;
         }
     }
 }

@@ -1,14 +1,5 @@
 <?php
 
-/** * @var array $equipments 
- * @var string $q
- * @var int $page
- * @var int $perPage
- * @var int $total
- * @var int $totalPages
- * @var string $sort
- * @var string $direction
- */
 ob_start();
 ?>
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
@@ -16,14 +7,19 @@ ob_start();
     <a class="btn primary" href="/equipments/create">+ Thêm Thiết bị</a>
 </div>
 
-<form method="get" action="/equipments" class="toolbar">
+<form method="get" action="/equipments" style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
     <input type="hidden" name="page" value="1">
-    <div class="flex-grow">
-        <label style="margin:0; min-width: max-content;">Tìm kiếm</label>
-        <input type="text" name="q" value="<?= e($q) ?>" placeholder="Mã TB, Tên TB, Danh mục...">
-    </div>
-    <span class="sort-info">Sắp xếp: <?= e($sort) ?> <?= strtoupper(e($direction)) ?> | Hiển thị: <?= e($perPage) ?></span>
-    <button type="submit" class="btn secondary">Lọc</button>
+
+    <input type="text" name="q" value="<?= htmlspecialchars($q ?? '') ?>" placeholder="Mã TB, Tên TB..." style="padding: 6px; border-radius: 4px; border: 1px solid #ccc;">
+
+    <select name="status" style="padding: 6px; border-radius: 4px; border: 1px solid #ccc;">
+        <option value="">Tất cả trạng thái</option>
+        <option value="available" <?= (isset($status) && $status === 'available') ? 'selected' : '' ?>>Rảnh</option>
+        <option value="rented" <?= (isset($status) && $status === 'rented') ? 'selected' : '' ?>>Đang cho mượn</option>
+        <option value="maintenance" <?= (isset($status) && $status === 'maintenance') ? 'selected' : '' ?>>Bảo trì</option>
+    </select>
+
+    <button type="submit" style="padding: 6px 12px; cursor: pointer;">Lọc</button>
 </form>
 
 <table>
@@ -56,7 +52,8 @@ ob_start();
                     <a href="/equipments/edit?id=<?= e($eq['id']) ?>" style="color: #2563eb; text-decoration: none; margin-right: 12px; font-weight: 500;">Sửa</a>
                     <form method="post" action="/equipments/delete" style="display: inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thiết bị này?')">
                         <input type="hidden" name="id" value="<?= e($eq['id']) ?>">
-                        <button type="submit" style="background: transparent; border: none; color: #dc2626; cursor: pointer; padding: 0; text-decoration: none; font-weight: 500; font-size: 1rem; font-family: inherit;">Xóa</button>
+                        <button type="submit" style="background: transparent; border: none; color: #dc2626; cursor: pointer; padding: 0; 
+                        text-decoration: none; font-weight: 500; font-size: 1rem; font-family: inherit;">Xóa</button>
                     </form>
                 </td>
             </tr>

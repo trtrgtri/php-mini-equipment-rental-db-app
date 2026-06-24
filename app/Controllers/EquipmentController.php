@@ -12,6 +12,7 @@ class EquipmentController
     public function index(): void
     {
         $q = trim($_GET['q'] ?? '');
+        $status = trim($_GET['status'] ?? '');
         $page = max(1, (int)($_GET['page'] ?? 1));
         $perPage = 10;
         $sort = $_GET['sort'] ?? 'created_at';
@@ -19,15 +20,15 @@ class EquipmentController
         $offset = ($page - 1) * $perPage;
 
         $repo = $this->repository();
-        $total = $repo->countAll($q);
+        $total = $repo->countAll($q, $status);
         $totalPages = max(1, (int)ceil($total / $perPage));
-        if ($page > $totalPages) {
+        if ($page > $totalPages && $totalPages > 0) {
             $page = $totalPages;
             $offset = ($page - 1) * $perPage;
         }
 
-        $equipments = $repo->getPaginated($q, $perPage, $offset, $sort, $direction);
-        view('equipments/index', compact('equipments', 'q', 'page', 'perPage', 'total', 'totalPages', 'sort', 'direction'));
+        $equipments = $repo->getPaginated($q, $perPage, $offset, $sort, $direction, $status);
+        view('equipments/index', compact('equipments', 'q', 'status', 'page', 'perPage', 'total', 'totalPages', 'sort', 'direction'));
     }
 
     public function create(): void
